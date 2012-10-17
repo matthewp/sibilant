@@ -364,7 +364,11 @@
   (concat (macros.send (translate arr) 'indexOf value) " !== -1"))
 
 (defmacro ternary (cond if-true if-false)
+<<<<<<< HEAD
   (concat "(" (translate cond) ") ? " (translate if-true) " : " (translate if-false)))
 
 (defmacro instance-of? (item type)
   (concat "(" (translate item) " instanceof " (translate type) ")"))
+=======
+  (concat "(" (translate cond) ") ? " (translate if-true) " : " (translate if-false)))
+>>>>>>> ternary
