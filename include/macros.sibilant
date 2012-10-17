@@ -362,3 +362,6 @@
 
 (defmacro contains? (arr value)
   (concat (macros.send (translate arr) 'indexOf value) " !== -1"))
+
+(defmacro ternary (cond if-true if-false)
+  (concat (translate cond) " ? " (translate if-true) " : " (translate if-false)))
