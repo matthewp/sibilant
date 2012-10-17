@@ -359,3 +359,6 @@
       (concat (translate k) " = " (translate v))))
     (if (undefined? body) ");"
                 (concat ") {" (indent (translate body)) "}"))))
+
+(defmacro contains? (arr value)
+  (concat (macros.send (translate arr) 'indexOf value) " !== -1"))
