@@ -5,7 +5,7 @@
      'comment            "(;.*)"
      'string             "(\"(([^\"]|(\\\\\"))*[^\\\\])?\")"
      'number             "(-?[0-9][0-9.,]*)"
-     'literal            "(-?[*.$a-zA-Z][*.a-zA-Z0-9-]*(\\?|!)?)"
+     'literal            "(-?[*.$a-zA-Z][*.a-zA-Z0-9-]*(\\?|!|\\+)?)"
      'special            "([&']?)"
      'other-char         "([><=!\\+\\/\\*-]+)"
      'open-paren         "(\\()"
@@ -289,12 +289,36 @@
     (concat "{ " (join ", " pair-strings) " }")
     (concat "{" (indent (join ",\n" pair-strings)) "}")))
 
+(defvar namespace false)
+
+(defun macros.defun+ (&rest args)
+  (when (not namespace)
+    (throw (concat "Namespace is not defined.")))
+  (setf (first args) (concat namespace "." (first args)))
+  (apply macros.defun args))
+
+(defun macros.defvar+ (&rest pairs)
+  (when (not namespace)
+    (throw (concat "Namespace is not defined.")))
+  (concat namespace "."
+          (join ";\n"
+                (bulk-map pairs
+                          (lambda (name value)
+                            (concat (translate name) " = "
+                                    (translate value)))))
+          ";"))
+
+(defun macros.ns (name)
+  (when namespace
+    (throw (concat "Namespace " namespace " already defined.")))
+  (setf namespace (translate name)) "")
 
 (defun literal (string)
   (inject (chain string
             (replace /\*/g "_")
             (replace /\?$/ "__QUERY")
-            (replace /!$/  "__BANG"))
+            (replace /!$/  "__BANG")
+            (replace /\+$/  "__ADD"))
           (string.match /-(.)/g)
           (lambda (return-string match)
             (return-string.replace match
@@ -329,11 +353,19 @@
 (set sibilant 'translate translate)
 
 (defun translate-all (contents)
-  (defvar buffer "")
+  (defvar buffer "")  
   (each (token) (tokenize contents)
     (defvar line (translate token 'statement))
     (when line (setf buffer (concat buffer line "\n"))))
-  buffer)
+
+  (when namespace
+    (setf buffer (translate (concat "var " namespace " = (function() {"
+                       (indent
+                        (concat "var " namespace " = {};\n\n"
+                                buffer "return " namespace ";"))
+                       "})();")))
+    (setf namespace false))
+    buffer)
 
 (set sibilant 'translate-all translate-all)
 

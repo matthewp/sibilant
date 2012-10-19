@@ -1,0 +1,10 @@
+(ns namespace-test)
+
+(defvar private-variable "This is a private variable.")
+(defvar+ public-variable "This is a public variable.")
+
+(defun private-function ()
+  "This function is private.")
+
+(defun+ public-function ()
+  "This function is public.")
