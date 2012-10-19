@@ -23,6 +23,13 @@
             (send collector push (fn item index))
             collector)))
 
+(defun filter (items fn)
+  (inject [] items
+          (lambda (collector item index)
+            (when (fn item index)
+              (send collector push item))
+            collector)))
+
 (defun select (items fn)
   (inject [] items
           (lambda (collector item index)
