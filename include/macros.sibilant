@@ -388,16 +388,21 @@
                (apply macros.lambda (cons item body))))
 
 (defmacro find-first (item list &rest body)
-  (concat "(function " (translate 'find-first) "() {"
-          (indent (concat "for (var __index = 0; index < " (translate list)
-                         ".length; __index++) {"
-                         (indent
-                          (concat "if ("
-                                  (apply macros.lambda (cons item body))
-                                  ") {"
-                                         (indent (concat "return "
-                                                         (translate list)
-                                                         "[__index];"))
-                                         "}"))
-                         "}\n" "return undefined;"))
-          "})();"))
+  (concat
+   "(function " (translate 'find-first) "() {"
+   (indent (macros.defvar 'fn (apply macros.lambda (cons item body))))
+   (indent (concat "for (var __index = 0; index < " (translate list)
+                   ".length; __index++) {"
+                   (indent
+                    (concat "if (" (macros.call 'fn
+                                                (concat (translate list)
+                                                        "[__index]")
+                                                "index"
+                                                (translate list))
+                            ") {"
+                            (indent (concat "return "
+                                            (translate list)
+                                            "[__index];"))
+                            "}"))
+                   "}"))
+   "})();"))                  

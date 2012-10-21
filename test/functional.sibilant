@@ -17,3 +17,6 @@
 
 (find-first (item index) some-list
             (= item 1))
+
+(defvar first-four (find-first (item) some-list
+                               (= item 4)))
