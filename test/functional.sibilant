@@ -14,3 +14,6 @@
 
 (filter (item index list) some-list
         (or (= item 2) (= item 3)))
+
+(find-first (item index) some-list
+            (= item 1))

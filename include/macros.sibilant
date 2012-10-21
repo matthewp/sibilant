@@ -378,3 +378,26 @@
 (defmacro reduce-right (item list &rest body)
   (macros.send (translate list) 'reduce-right
                (apply macros.lambda (cons item body))))
+
+(defmacro some (item list &rest body)
+  (macros.send (translate list) 'some
+               (apply macros.lambda (cons item body))))
+
+(defmacro every (item list &rest body)
+  (macros.send (translate list) 'every
+               (apply macros.lambda (cons item body))))
+
+(defmacro find-first (item list &rest body)
+  (concat "(function " (translate 'find-first) "() {"
+          (indent (concat "for (var __index = 0; index < " (translate list)
+                         ".length; __index++) {"
+                         (indent
+                          (concat "if ("
+                                  (apply macros.lambda (cons item body))
+                                  ") {"
+                                         (indent (concat "return "
+                                                         (translate list)
+                                                         "[__index];"))
+                                         "}"))
+                         "}\n" "return undefined;"))
+          "})();"))
