@@ -362,3 +362,19 @@
 
 (defmacro instance-of? (item type)
   (concat "(" (translate item) " instanceof " (translate type) ")"))
+
+(defmacro map (item list &rest body)
+  (macros.send (translate list) 'map
+               (apply macros.lambda (cons item body))))
+
+(defmacro filter (item list &rest body)
+  (macros.send (translate list) 'filter
+               (apply macros.lambda (cons item body))))
+
+(defmacro reduce (item list &rest body)
+  (macros.send (translate list) 'reduce
+               (apply macros.lambda (cons item body))))
+
+(defmacro reduce-right (item list &rest body)
+  (macros.send (translate list) 'reduce-right
+               (apply macros.lambda (cons item body))))
