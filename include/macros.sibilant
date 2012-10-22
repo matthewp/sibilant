@@ -373,3 +373,49 @@
   (concat "Array.prototype.slice.call(" (translate list)
           ", " (or (translate begin) 0) (if (defined? end) (concat ", "
           (translate end) ")") ")")))
+
+(defmacro map (item list &rest body)
+  (macros.send (translate list) 'map
+               (apply macros.lambda (cons item body))))
+
+(defmacro filter (item list &rest body)
+  (macros.send (translate list) 'filter
+               (apply macros.lambda (cons item body))))
+
+(defmacro reduce (item list &rest body)
+  (macros.send (translate list) 'reduce
+               (apply macros.lambda (cons item body))))
+
+(defmacro reduce-right (item list &rest body)
+  (macros.send (translate list) 'reduce-right
+               (apply macros.lambda (cons item body))))
+
+(defmacro some (item list &rest body)
+  (macros.send (translate list) 'some
+               (apply macros.lambda (cons item body))))
+
+(defmacro every (item list &rest body)
+  (macros.send (translate list) 'every
+               (apply macros.lambda (cons item body))))
+
+(defmacro find-first (item list &rest body)
+  (defvar the-list (translate 'the-list))
+  (concat
+   "(function " (translate 'find-first) "(" the-list ") {"
+   (indent (macros.defvar 'fn (apply macros.lambda (cons item body))))
+   (indent
+    (concat "for (var __index = 0; index < "
+            the-list
+            ".length; __index++) {"
+            (indent
+             (concat "if ("
+                     (macros.call 'fn
+                                  (concat the-list "[__index]")
+                                  "index"
+                                  the-list)
+                     ") {"
+                     (indent
+                      (concat "return " the-list "[__index];"))
+                     "}"))
+            "}"))
+   "})(" (translate list) ");"))

@@ -1,0 +1,22 @@
+(defvar some-list '(1 2 3 4 5))
+
+(map (item index list) some-list
+     (+ item 1))
+
+(reduce (previous-value item index list) some-list
+        (+ item (or previous-value 0)))
+
+(reduce-right (previous-value item index list) some-list
+              (+ item (or previous-value 0)))
+
+(each (item array) some-list
+      (+ item 1))
+
+(filter (item index list) some-list
+        (or (= item 2) (= item 3)))
+
+(find-first (item index) some-list
+            (= item 1))
+
+(defvar first-four (find-first (item) some-list
+                               (= item 4)))
