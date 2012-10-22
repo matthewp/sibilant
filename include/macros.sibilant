@@ -354,7 +354,7 @@
           "})()"))
 
 (defmacro let (args &optional body)
-  (concat "let (" (bulk-map args
+  (concat "let (" (bulk-map argsu
     (lambda (h k v)
       (concat (translate k) " = " (translate v))))
     (if (undefined? body) ");"
@@ -362,3 +362,13 @@
 
 (defmacro instance-of? (item type)
   (concat "(" (translate item) " instanceof " (translate type) ")"))
+
+(defmacro import (from-namespace &rest pairs)
+  (defvar ns-nm (translate from-namespace))
+  (concat "var "
+          (join ",\n    "
+                (map (flatten pairs)
+                     (lambda (name)
+                       (concat (translate name) " = "
+                               (concat ns-nm "." (translate name))))))
+          ";"))

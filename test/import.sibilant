@@ -1,0 +1,3 @@
+(import some-namespace foo bar buzz bock-man)
+
+(import some-namespace (list foo bar buzz bock-man))
