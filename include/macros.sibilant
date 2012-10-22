@@ -354,7 +354,7 @@
           "})()"))
 
 (defmacro let (args &optional body)
-  (concat "let (" (bulk-map argsu
+  (concat "let (" (bulk-map args
     (lambda (h k v)
       (concat (translate k) " = " (translate v))))
     (if (undefined? body) ");"
