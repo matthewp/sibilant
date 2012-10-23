@@ -372,3 +372,14 @@
                        (concat (translate name) " = "
                                (concat ns-nm "." (translate name))))))
           ";"))
+
+(defmacro import-into (from-namespace &rest pairs)
+  (concat "var "
+          (join ",\n    "
+                (bulk-map pairs
+                          (lambda (name value)
+                            (concat (translate value) " = "
+                                    (concat (translate from-namespace)
+                                            "." (translate name))))))
+          ";"))
+                          

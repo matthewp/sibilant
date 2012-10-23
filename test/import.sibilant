@@ -1,3 +1,6 @@
 (import some-namespace foo bar buzz bock-man)
 
-(import some-namespace (list foo bar buzz bock-man))
+(import-into some-namespace foo my-foo
+                            bar this-bar
+                            buzz buzz
+                            bock-man bock)
