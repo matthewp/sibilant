@@ -47,8 +47,10 @@
       (stdin.on 'data (lambda (chunk) (setf data (concat data chunk))))
       (stdin.on 'end (lambda (&rest args)
                        (run-in-sandbox (sibilant.translate-all data)))))
-    (each (arg) args
-      (run-in-sandbox (sibilant.translate-all arg)))))
+    (each
+        (lambda (arg)
+          (run-in-sandbox (sibilant.translate-all arg)))
+      args)))
 
 
 (defun cli.help (&rest args)
@@ -127,9 +129,10 @@ $ sibilant --repl
 (defvar output-dir
         (when cli-options.output (first cli-options.output)))
 
-(each (input-file) (or cli-options.input [])
-  (defvar input-path (path.join (process.cwd) input-file)
-          translated (sibilant.translate-file input-path))
+(each
+    (lambda (input-file)
+      (defvar input-path (path.join (process.cwd) input-file)
+              translated (sibilant.translate-file input-path))
 
   (if output-dir
     (progn
@@ -140,3 +143,4 @@ $ sibilant --repl
     (if cli-options.execute
       (run-in-sandbox translated input-path)
       (console.log translated))))
+  (or cli-options.input))

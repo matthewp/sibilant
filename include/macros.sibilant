@@ -196,9 +196,8 @@
              (lambda (arg)
                (concat "\"" arg ":\" + " (translate arg))))))
 
-(defmacro each (item array &rest body)
-  (macros.send (translate array) 'for-each
-               (apply macros.lambda (cons item body))))
+(defmacro each (fn list)
+  (concat (macros.send (translate list) 'for-each fn) ";"))
 
 
 (defmacro setf (&rest args)

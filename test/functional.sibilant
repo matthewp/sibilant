@@ -1,5 +1,9 @@
 (defvar some-list '(1 2 3 4 5))
 
+(each some-list
+    (lambda (item)
+      (+ 2 item)))
+
 (map (item index list) some-list
      (+ item 1))
 

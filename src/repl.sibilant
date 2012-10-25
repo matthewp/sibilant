@@ -33,9 +33,11 @@
                (try
                  (progn
                    (setf cmd-buffer (concat cmd-buffer cmd))
-                   (each (stmt) (sibilant.tokenize cmd-buffer)
+                   (each
+                     (lambda (stmt)
                      (setf js-line (concat js-line
                                            (sibilant.translate stmt 'statement))))
+                     (sibilant.tokenize cmd-buffer))
                    (defvar result (vm.run-in-context js-line context "sibilant-repl"))
                    (set readline.history 0 cmd-buffer)
                    (when (defined? result)
