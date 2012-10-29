@@ -20,3 +20,6 @@
 
 (defvar first-four (find-first (item) some-list
                                (= item 4)))
+
+(dotimes 3 (idx)
+         (+ idx 14))

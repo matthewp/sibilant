@@ -387,20 +387,32 @@
   (macros.send (translate list) 'every
                (apply macros.lambda (cons item body))))
 
+(defmacro dotimes (times item &rest body)
+  (concat
+   "(function (){"
+   (indent (macros.defvar 'fn (apply macros.lambda (cons item body))))
+   (indent
+    (concat "for (var __index = 0; __index < " (translate times)
+            "; __index++) {"
+            (indent
+             (concat (macros.call 'fn "__index") ";"))
+            "}"))
+   "})();"))
+
 (defmacro find-first (item list &rest body)
   (defvar the-list (translate 'the-list))
   (concat
    "(function " (translate 'find-first) "(" the-list ") {"
    (indent (macros.defvar 'fn (apply macros.lambda (cons item body))))
    (indent
-    (concat "for (var __index = 0; index < "
+    (concat "for (var __index = 0; __index < "
             the-list
             ".length; __index++) {"
             (indent
              (concat "if ("
                      (macros.call 'fn
                                   (concat the-list "[__index]")
-                                  "index"
+                                  "__index"
                                   the-list)
                      ") {"
                      (indent
