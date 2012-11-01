@@ -374,10 +374,6 @@
           ", " (or (translate begin) 0) (if (defined? end) (concat ", "
           (translate end) ")") ")")))
 
-(defmacro map (item list &rest body)
-  (macros.send (translate list) 'map
-               (apply macros.lambda (cons item body))))
-
 (defmacro filter (item list &rest body)
   (macros.send (translate list) 'filter
                (apply macros.lambda (cons item body))))
